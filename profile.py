@@ -44,7 +44,7 @@ pc.verifyParameters()
 # Add a raw PC to the request.
 server = request.RawPC("server")
 # d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-server.hardware_type = 'd430'
+server.hardware_type = 'd710'
 # https://docs.emulab.net/advanced-topics.html , Public IP Access
 # server.routable_control_ip = True
 iface1 = server.addInterface()
@@ -53,7 +53,7 @@ iface1.addAddress(pg.IPv4Address("192.168.1.1", "255.255.255.0"))
 
 client = request.RawPC("client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
-client.hardware_type = 'pc3000'
+client.hardware_type = 'd710'
 # client.routable_control_ip = True
 iface2 = client.addInterface()
 # Specify the IPv4 address
@@ -71,7 +71,7 @@ client.disk_image = ubuntu_image
 # Create the bridged link between the two nodes.
 link = request.BridgedLink("link")
 #link.bridge.hardware_type = 'd710'
-link.bridge.hardware_type = 'pc3000'
+link.bridge.hardware_type = 'd710'
 # Add the interfaces we created above.
 link.addInterface(iface1)
 link.addInterface(iface2)
