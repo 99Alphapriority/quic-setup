@@ -172,12 +172,18 @@ link_bridge_R1_right.addInterface(iface6)
 project = params.project
 # Install and execute a script that is contained in the repository.
 tcp_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+tcp_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
 quic_server_cubic.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+quic_server_cubic.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
 quic_server_bbr.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+quic_server_bbr.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
 
 tcp_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+tcp_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 quic_client_1.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+quic_client_1.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 quic_client_2.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+quic_client_2.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 
 
 # Install specific packages
@@ -186,7 +192,9 @@ tcp_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ par
 quic_client_1.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 quic_client_2.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/bridge-tunning.sh"))
+link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/R1-static-route.sh"))
 link_bridge_R2.addService(pg.Execute(shell="sh", command="/local/repository/scripts/bridge-tunning.sh"))
+link_bridge_R2.addService(pg.Execute(shell="sh", command="/local/repository/scripts/R2-static-route.sh"))
 
 # Print the RSpec to the enclosing page.
 pc.printRequestRSpec(request)
