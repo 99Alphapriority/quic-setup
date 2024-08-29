@@ -192,7 +192,7 @@ quic_client_1.addService(pg.Execute(shell="sh", command="export PROJECT="+ proje
 
 # Install specific packages
 tcp_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
-quic_client_1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
+quic_server_cubic.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
 tcp_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 quic_client_1.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 #quic_client_2.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
