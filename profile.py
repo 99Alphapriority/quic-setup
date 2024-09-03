@@ -75,7 +75,8 @@ CLIENT NODES
 
 quic_client_1 = request.RawPC("quic_client_1")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
-quic_client_1.hardware_type = 'd710'
+#quic_client_1.hardware_type = 'd710'
+quic_client_1.hardware_type = 'd430'
 # client.routable_control_ip = True
 iface4 = quic_client_1.addInterface()
 # Specify the IPv4 address
@@ -93,7 +94,8 @@ iface5.addAddress(pg.IPv4Address("192.168.254.21", "255.255.255.0"))
 
 tcp_client = request.RawPC("tcp_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
-tcp_client.hardware_type = 'd710'
+#tcp_client.hardware_type = 'd710'
+tcp_client.hardware_type = 'd430'
 # client.routable_control_ip = True
 iface6 = tcp_client.addInterface()
 # Specify the IPv4 address
@@ -119,12 +121,14 @@ ROUTERS
 
 #R1
 link_bridge_R1 = request.Bridge('link_bridge_R1', 'if1', 'if0')
-link_bridge_R1.hardware_type = 'd710'
+#link_bridge_R1.hardware_type = 'd710'
+link_bridge_R1.hardware_type = 'd430'
 link_bridge_R1.disk_image = fbsd_image
 
 #R2
 link_bridge_R2 = request.Bridge('link_bridge_R2', 'if1', 'if0')
-link_bridge_R2.hardware_type = 'd710'
+#link_bridge_R2.hardware_type = 'd710'
+link_bridge_R2.hardware_type = 'd430'
 link_bridge_R2.disk_image = fbsd_image
 
 iface7 = link_bridge_R1.iface0
