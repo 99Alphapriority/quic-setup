@@ -37,34 +37,34 @@ pc.verifyParameters()
 SERVER NODES
 '''
 # Add a raw PC to the request.
-quic_server_cubic = request.RawPC("quic_server_cubic")
+ping_server = request.RawPC("ping_server")
 # d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-quic_server_cubic.hardware_type = 'd430'
+ping_server.hardware_type = 'd430'
 # https://docs.emulab.net/advanced-topics.html , Public IP Access
 # server.routable_control_ip = True
-iface1 = quic_server_cubic.addInterface()
+iface1 = ping_server.addInterface()
 # Specify the IPv4 address
 iface1.addAddress(pg.IPv4Address("192.168.253.11", "255.255.255.0"))
 
-'''
-# Add a raw PC to the request.
-quic_server_bbr = request.RawPC("quic_server_bbr")
-# d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-quic_server_bbr.hardware_type = 'd430'
-# https://docs.emulab.net/advanced-topics.html , Public IP Access
-# server.routable_control_ip = True
-iface2 = quic_server_bbr.addInterface()
-# Specify the IPv4 address
-iface2.addAddress(pg.IPv4Address("192.168.253.21", "255.255.255.0"))
-'''
 
 # Add a raw PC to the request.
-tcp_server = request.RawPC("tcp_server")
+cubic_server = request.RawPC("cubic_server")
 # d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-tcp_server.hardware_type = 'd430'
+cubic_server.hardware_type = 'd430'
 # https://docs.emulab.net/advanced-topics.html , Public IP Access
 # server.routable_control_ip = True
-iface3 = tcp_server.addInterface()
+iface2 = cubic_server.addInterface()
+# Specify the IPv4 address
+iface2.addAddress(pg.IPv4Address("192.168.253.21", "255.255.255.0"))
+
+
+# Add a raw PC to the request.
+bbr_server = request.RawPC("bbr_server")
+# d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
+bbr_server.hardware_type = 'd430'
+# https://docs.emulab.net/advanced-topics.html , Public IP Access
+# server.routable_control_ip = True
+iface3 = bbr_server.addInterface()
 # Specify the IPv4 address
 iface3.addAddress(pg.IPv4Address("192.168.253.31", "255.255.255.0"))
 
@@ -73,12 +73,12 @@ iface3.addAddress(pg.IPv4Address("192.168.253.31", "255.255.255.0"))
 CLIENT NODES
 '''
 
-quic_client_1 = request.RawPC("quic_client_1")
+ping_client = request.RawPC("ping_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
 #quic_client_1.hardware_type = 'd710'
-quic_client_1.hardware_type = 'd430'
+ping_client.hardware_type = 'd430'
 # client.routable_control_ip = True
-iface4 = quic_client_1.addInterface()
+iface4 = ping_client.addInterface()
 # Specify the IPv4 address
 iface4.addAddress(pg.IPv4Address("192.168.254.11", "255.255.255.0"))
 
@@ -92,12 +92,12 @@ iface5 = quic_client_2.addInterface()
 iface5.addAddress(pg.IPv4Address("192.168.254.21", "255.255.255.0"))
 '''
 
-tcp_client = request.RawPC("tcp_client")
+iperf_client = request.RawPC("tcp_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
 #tcp_client.hardware_type = 'd710'
-tcp_client.hardware_type = 'd430'
+iperf_client.hardware_type = 'd430'
 # client.routable_control_ip = True
-iface6 = tcp_client.addInterface()
+iface6 = iperf_client.addInterface()
 # Specify the IPv4 address
 iface6.addAddress(pg.IPv4Address("192.168.254.31", "255.255.255.0"))
 
@@ -107,12 +107,12 @@ fbsd_image = "urn:publicid:IDN+emulab.net+image+emulab-ops:FBSD132-64-STD"
 
 # Request that a specific image be installed on this node
 ubuntu_image = ubuntu_22 if params.quic_version == 'RFCv1' else ubuntu_18
-quic_server_cubic.disk_image = ubuntu_image
-#quic_server_bbr.disk_image = ubuntu_image
-tcp_server.disk_image = ubuntu_image
-quic_client_1.disk_image = ubuntu_image
+ping_server.disk_image = ubuntu_image
+cubic_server.disk_image = ubuntu_image
+bbr_server.disk_image = ubuntu_image
+ping_client.disk_image = ubuntu_image
 #quic_client_2.disk_image = ubuntu_image
-tcp_client.disk_image = ubuntu_image
+iperf_client.disk_image = ubuntu_image
 
 '''
 ROUTERS
@@ -146,7 +146,7 @@ link_bridge_R1_left = request.Link('link_bridge_R1_left')
 link_bridge_R1_left.Site('undefined')
 link_bridge_R1_left.addInterface(iface7)
 link_bridge_R1_left.addInterface(iface1)
-#link_bridge_R1_left.addInterface(iface2)
+link_bridge_R1_left.addInterface(iface2)
 link_bridge_R1_left.addInterface(iface3)
 
 # R1 Link link_bridge_right
@@ -168,7 +168,7 @@ link_bridge_R1_right = request.Link('link_bridge_R2_right')
 link_bridge_R1_right.Site('undefined')
 link_bridge_R1_right.addInterface(iface10)
 link_bridge_R1_right.addInterface(iface4)
-#link_bridge_R1_right.addInterface(iface5)
+link_bridge_R1_right.addInterface(iface5)
 link_bridge_R1_right.addInterface(iface6)
 
 
@@ -179,26 +179,27 @@ link_bridge_R1_right.addInterface(iface6)
 # pass variable to script
 project = params.project
 # Install and execute a script that is contained in the repository.
-tcp_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-tcp_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
-quic_server_cubic.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-quic_server_cubic.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
-#quic_server_bbr.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-#quic_server_bbr.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
+ping_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+ping_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
+cubic_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+cubic_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
+bbr_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+bbr_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
 
-tcp_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-tcp_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
-quic_client_1.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-quic_client_1.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
+ping_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+ping_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
+iperf_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+iperf_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 #quic_client_2.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
 #quic_client_2.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 
 
 # Install specific packages
-tcp_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
-quic_server_cubic.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
-tcp_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
-quic_client_1.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
+ping_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
+cubic_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
+bbr_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
+ping_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
+iperf_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 #quic_client_2.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/bridge-tunning.sh"))
 link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/R1-static-route.sh"))
