@@ -168,7 +168,7 @@ link_bridge_R1_right = request.Link('link_bridge_R2_right')
 link_bridge_R1_right.Site('undefined')
 link_bridge_R1_right.addInterface(iface10)
 link_bridge_R1_right.addInterface(iface4)
-link_bridge_R1_right.addInterface(iface5)
+#link_bridge_R1_right.addInterface(iface5)
 link_bridge_R1_right.addInterface(iface6)
 
 
