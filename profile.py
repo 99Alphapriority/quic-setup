@@ -82,22 +82,22 @@ iface4 = ping_client.addInterface()
 # Specify the IPv4 address
 iface4.addAddress(pg.IPv4Address("192.168.254.11", "255.255.255.0"))
 
-'''
-quic_client_2 = request.RawPC("quic_client_2")
+
+cubic_client = request.RawPC("cubic_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
-quic_client_2.hardware_type = 'd710'
+cubic_client.hardware_type = 'd710'
 # client.routable_control_ip = True
-iface5 = quic_client_2.addInterface()
+iface5 = cubic_client.addInterface()
 # Specify the IPv4 address
 iface5.addAddress(pg.IPv4Address("192.168.254.21", "255.255.255.0"))
-'''
 
-iperf_client = request.RawPC("tcp_client")
+
+bbr_client = request.RawPC("bbr_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
 #tcp_client.hardware_type = 'd710'
-iperf_client.hardware_type = 'd430'
+bbr_client.hardware_type = 'd430'
 # client.routable_control_ip = True
-iface6 = iperf_client.addInterface()
+iface6 = bbr_client.addInterface()
 # Specify the IPv4 address
 iface6.addAddress(pg.IPv4Address("192.168.254.31", "255.255.255.0"))
 
@@ -111,8 +111,8 @@ ping_server.disk_image = ubuntu_image
 cubic_server.disk_image = ubuntu_image
 bbr_server.disk_image = ubuntu_image
 ping_client.disk_image = ubuntu_image
-#quic_client_2.disk_image = ubuntu_image
-iperf_client.disk_image = ubuntu_image
+cubic_client.disk_image = ubuntu_image
+bbr_client.disk_image = ubuntu_image
 
 '''
 ROUTERS
@@ -164,12 +164,12 @@ link_bridge_R2_left.addInterface(iface9)
 '''
 
 # Link link_bridge_right
-link_bridge_R1_right = request.Link('link_bridge_R2_right')
-link_bridge_R1_right.Site('undefined')
-link_bridge_R1_right.addInterface(iface10)
-link_bridge_R1_right.addInterface(iface4)
-#link_bridge_R1_right.addInterface(iface5)
-link_bridge_R1_right.addInterface(iface6)
+link_bridge_R2_right = request.Link('link_bridge_R2_right')
+link_bridge_R2_right.Site('undefined')
+link_bridge_R2_right.addInterface(iface10)
+link_bridge_R2_right.addInterface(iface4)
+link_bridge_R2_right.addInterface(iface5)
+link_bridge_R2_right.addInterface(iface6)
 
 
 # Give bridge some shaping parameters. (Implict parameter found in real link)
@@ -188,10 +188,10 @@ bbr_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project 
 
 ping_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
 ping_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
-iperf_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-iperf_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
-#quic_client_2.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-#quic_client_2.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
+cubic_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+cubic_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
+bbr_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+bbr_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 
 
 # Install specific packages
@@ -199,8 +199,8 @@ ping_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts
 cubic_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
 bbr_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
 ping_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
-iperf_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
-#quic_client_2.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
+cubic_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
+bbr_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/bridge-tunning.sh"))
 link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/R1-static-route.sh"))
 link_bridge_R2.addService(pg.Execute(shell="sh", command="/local/repository/scripts/bridge-tunning.sh"))
