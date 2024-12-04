@@ -39,7 +39,7 @@ SERVER NODES
 # Add a raw PC to the request.
 ping_server = request.RawPC("ping_server")
 # d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-ping_server.hardware_type = 'd430'
+ping_server.hardware_type = 'd710'
 # https://docs.emulab.net/advanced-topics.html , Public IP Access
 # server.routable_control_ip = True
 iface1 = ping_server.addInterface()
@@ -50,7 +50,7 @@ iface1.addAddress(pg.IPv4Address("192.168.253.11", "255.255.255.0"))
 # Add a raw PC to the request.
 cubic_server = request.RawPC("cubic_server")
 # d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-cubic_server.hardware_type = 'd430'
+cubic_server.hardware_type = 'd710'
 # https://docs.emulab.net/advanced-topics.html , Public IP Access
 # server.routable_control_ip = True
 iface2 = cubic_server.addInterface()
@@ -61,7 +61,7 @@ iface2.addAddress(pg.IPv4Address("192.168.253.21", "255.255.255.0"))
 # Add a raw PC to the request.
 bbr_server = request.RawPC("bbr_server")
 # d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-bbr_server.hardware_type = 'd430'
+bbr_server.hardware_type = 'd710'
 # https://docs.emulab.net/advanced-topics.html , Public IP Access
 # server.routable_control_ip = True
 iface3 = bbr_server.addInterface()
@@ -76,7 +76,7 @@ CLIENT NODES
 ping_client = request.RawPC("ping_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
 #quic_client_1.hardware_type = 'd710'
-ping_client.hardware_type = 'd430'
+ping_client.hardware_type = 'd710'
 # client.routable_control_ip = True
 iface4 = ping_client.addInterface()
 # Specify the IPv4 address
@@ -95,7 +95,7 @@ iface5.addAddress(pg.IPv4Address("192.168.254.21", "255.255.255.0"))
 bbr_client = request.RawPC("bbr_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
 #tcp_client.hardware_type = 'd710'
-bbr_client.hardware_type = 'd430'
+bbr_client.hardware_type = 'd710'
 # client.routable_control_ip = True
 iface6 = bbr_client.addInterface()
 # Specify the IPv4 address
@@ -122,13 +122,13 @@ ROUTERS
 #R1
 link_bridge_R1 = request.Bridge('link_bridge_R1', 'if1', 'if0')
 #link_bridge_R1.hardware_type = 'd710'
-link_bridge_R1.hardware_type = 'd430'
+link_bridge_R1.hardware_type = 'd710'
 link_bridge_R1.disk_image = fbsd_image
 
 #R2
 link_bridge_R2 = request.Bridge('link_bridge_R2', 'if1', 'if0')
 #link_bridge_R2.hardware_type = 'd710'
-link_bridge_R2.hardware_type = 'd430'
+link_bridge_R2.hardware_type = 'd710'
 link_bridge_R2.disk_image = fbsd_image
 
 iface7 = link_bridge_R1.iface0
