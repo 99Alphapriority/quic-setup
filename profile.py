@@ -48,14 +48,14 @@ iface1.addAddress(pg.IPv4Address("192.168.253.11", "255.255.255.0"))
 
 
 # Add a raw PC to the request.
-cubic_server = request.RawPC("cubic_server")
+#cubic_server = request.RawPC("cubic_server")
 # d430 -> 64GB ECC Memory, Two Intel E5-2630v3 8-Core CPUs at 2.4 GHz (Haswell)
-cubic_server.hardware_type = 'd430'
+#cubic_server.hardware_type = 'd430'
 # https://docs.emulab.net/advanced-topics.html , Public IP Access
 # server.routable_control_ip = True
-iface2 = cubic_server.addInterface()
+#iface2 = cubic_server.addInterface()
 # Specify the IPv4 address
-iface2.addAddress(pg.IPv4Address("192.168.253.21", "255.255.255.0"))
+#iface2.addAddress(pg.IPv4Address("192.168.253.21", "255.255.255.0"))
 
 
 # Add a raw PC to the request.
@@ -83,13 +83,13 @@ iface4 = ping_client.addInterface()
 iface4.addAddress(pg.IPv4Address("192.168.254.11", "255.255.255.0"))
 
 
-cubic_client = request.RawPC("cubic_client")
+#cubic_client = request.RawPC("cubic_client")
 # d710 -> 12 GB memory, 2.4 GHz quad-core
-cubic_client.hardware_type = 'd430'
+#cubic_client.hardware_type = 'd430'
 # client.routable_control_ip = True
-iface5 = cubic_client.addInterface()
+#iface5 = cubic_client.addInterface()
 # Specify the IPv4 address
-iface5.addAddress(pg.IPv4Address("192.168.254.21", "255.255.255.0"))
+#iface5.addAddress(pg.IPv4Address("192.168.254.21", "255.255.255.0"))
 
 
 bbr_client = request.RawPC("bbr_client")
@@ -146,7 +146,7 @@ link_bridge_R1_left = request.Link('link_bridge_R1_left')
 link_bridge_R1_left.Site('undefined')
 link_bridge_R1_left.addInterface(iface7)
 link_bridge_R1_left.addInterface(iface1)
-link_bridge_R1_left.addInterface(iface2)
+#link_bridge_R1_left.addInterface(iface2)
 link_bridge_R1_left.addInterface(iface3)
 
 # R1 Link link_bridge_right
@@ -168,7 +168,7 @@ link_bridge_R2_right = request.Link('link_bridge_R2_right')
 link_bridge_R2_right.Site('undefined')
 link_bridge_R2_right.addInterface(iface10)
 link_bridge_R2_right.addInterface(iface4)
-link_bridge_R2_right.addInterface(iface5)
+#link_bridge_R2_right.addInterface(iface5)
 link_bridge_R2_right.addInterface(iface6)
 
 
@@ -181,25 +181,25 @@ project = params.project
 # Install and execute a script that is contained in the repository.
 ping_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
 ping_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
-cubic_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-cubic_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
+#cubic_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+#cubic_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
 bbr_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
 bbr_server.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/server-nodes-static-route.sh"))
 
 ping_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
 ping_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
-cubic_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
-cubic_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
+#cubic_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
+#cubic_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 bbr_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-deps.sh"))
 bbr_client.addService(pg.Execute(shell="sh", command="export PROJECT="+ project + " QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/client-nodes-static-route.sh"))
 
 
 # Install specific packages
 ping_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
-cubic_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
+#cubic_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
 bbr_server.addService(pg.Execute(shell="sh", command="/local/repository/scripts/install-apache.sh"))
 ping_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
-cubic_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
+#cubic_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 bbr_client.addService(pg.Execute(shell="sh", command="export QUIC_VERSION="+ params.quic_version +" && /local/repository/scripts/install-client.sh"))
 link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/bridge-tunning.sh"))
 link_bridge_R1.addService(pg.Execute(shell="sh", command="/local/repository/scripts/R1-static-route.sh"))
