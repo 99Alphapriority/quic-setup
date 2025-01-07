@@ -108,10 +108,10 @@ fbsd_image = "urn:publicid:IDN+emulab.net+image+emulab-ops:FBSD132-64-STD"
 # Request that a specific image be installed on this node
 ubuntu_image = ubuntu_22 if params.quic_version == 'RFCv1' else ubuntu_18
 ping_server.disk_image = ubuntu_image
-cubic_server.disk_image = ubuntu_image
+#cubic_server.disk_image = ubuntu_image
 bbr_server.disk_image = ubuntu_image
 ping_client.disk_image = ubuntu_image
-cubic_client.disk_image = ubuntu_image
+#cubic_client.disk_image = ubuntu_image
 bbr_client.disk_image = ubuntu_image
 
 '''
