@@ -121,14 +121,14 @@ ROUTERS
 
 #R1
 link_bridge_R1 = request.Bridge('link_bridge_R1', 'if1', 'if0')
-link_bridge_R1.hardware_type = 'd710'
-#link_bridge_R1.hardware_type = 'd430'
+#link_bridge_R1.hardware_type = 'd710'
+link_bridge_R1.hardware_type = 'd430'
 link_bridge_R1.disk_image = fbsd_image
 
 #R2
 link_bridge_R2 = request.Bridge('link_bridge_R2', 'if1', 'if0')
-link_bridge_R2.hardware_type = 'd710'
-#link_bridge_R2.hardware_type = 'd430'
+#link_bridge_R2.hardware_type = 'd710'
+link_bridge_R2.hardware_type = 'd430'
 link_bridge_R2.disk_image = fbsd_image
 
 iface7 = link_bridge_R1.iface0
