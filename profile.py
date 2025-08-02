@@ -61,7 +61,7 @@ iface2.addAddress(pg.IPv4Address("192.168.1.2", "255.255.255.0"))
 
 ubuntu_22 = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU22-64-STD"
 ubuntu_18 = "urn:publicid:IDN+emulab.net+image+emulab-ops//UBUNTU18-64-STD"
-fbsd_image = "urn:publicid:IDN+emulab.net+image+emulab-ops:FBSD132-64-STD"
+fbsd_image = "urn:publicid:IDN+emulab.net+image+emulab-ops//FBSD132-64-STD"
 
 # Request that a specific image be installed on this node
 ubuntu_image = ubuntu_22 if params.quic_version == 'RFCv1' else ubuntu_18
